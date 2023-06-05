@@ -1,0 +1,39 @@
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  /* color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424; */
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+
+  --ubox-btn-background: linear-gradient(-54deg, #FF5F27 4%, #FF7500 100%);
+  --ubox-font-family: PingFangSC-Medium HelveticaNeue-Medium, Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  --ubox-grey: #737373;
+  --ubox-title: 18px;
+  --ubox-base-gap: 8px
+}
+
+
+input:hover {
+  outline: none;
+}
+
+html,
+body,
+#app {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  width: 100vw;
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+}
