@@ -7,7 +7,7 @@
         :goodsName="pageData?.goodName"
         :goodsUrl="pageData?.goodsPic"
       />
-      <Coupons />
+      <!-- <Coupons /> -->
       <Wallet
         @onClick="onWalletClick"
         :deduction="deductionOfWallet"
@@ -15,12 +15,14 @@
       />
       <WalletSelect
         :visible="isWalletSelectShow"
-        @onClose="onSelectPayWay"
+        @onClose="onWalletClose"
         :options="pageData?.funds ?? []"
+        @onSelect="onSelectPayWay"
+        :selectedItem="selectedWallet"
       />
     </Main>
     <Footer>
-      <PayOperator :price="bill" :discount="0" @onClick="onClickPayBtn" />
+      <PayOperator :price="bill" :discount="off" @onClick="onClickPayBtn" />
     </Footer>
   </PageContainer>
 </template>
@@ -32,7 +34,7 @@ import PayOperator from "@/components/PayOperator.vue"
 import PageContainer from "@/components/PageContainer.vue"
 import Main from "@/components/Main.vue"
 import Footer from "@/components/Footer.vue"
-import Coupons from "@/components/Coupons.vue"
+// import Coupons from "@/components/Coupons.vue"
 import Wallet from "@/components/Wallet.vue"
 import WalletSelect from "@/components/WalletSelect.vue"
 import getBEData from "@/utils/getBEData"
@@ -61,6 +63,13 @@ const bill = computed(() => {
   }`
 })
 
+const off = computed(() => {
+  return (
+    (getNumber(pageData.value?.totalPrice) * 100 -
+      getNumber(bill.value) * 100) /
+    100
+  )
+})
 /**
  * 拉起支付宝收银台支付
  * @param trade
@@ -143,11 +152,6 @@ async function onClickPayBtn() {
 
     let reportResultData = reportResult?.data
 
-    // let alipayCode = 9000
-    // let reportResultData = {
-    //   orderStatus: 9,
-    //   adJson:"{}"
-    // }
     if (alipayCode != ALIPAY_STATUS.SUCCESS && alipayCode != ALIPAY_STATUS.FAIL)
       return
 
@@ -186,11 +190,14 @@ async function onClickPayBtn() {
   }
 }
 
+function onWalletClose() {
+  isWalletSelectShow.value = false
+}
 /**
  * 选择钱包
  * @param item
  */
-function onSelectPayWay(item?: number) {
+function onSelectPayWay(item?: Wallet) {
   // 未选择钱包
   if (item == undefined) {
     isWalletSelectShow.value = false
@@ -198,20 +205,12 @@ function onSelectPayWay(item?: number) {
     return (deductionOfWallet.value = undefined)
   }
 
-  let wallet = pageData.value?.funds[item]
-
-  if (wallet == undefined) {
-    deductionOfWallet.value = undefined
-    isWalletSelectShow.value = false
-    return ap.showToast({ content: "无效钱包选择!" })
-  }
-
   // 价格(元)和钱包(分)单位不统一
-  selectedWallet.value = wallet
+  selectedWallet.value = item
   deductionOfWallet.value =
-    getNumber(wallet.balanceFen) >= getNumber(pageData.value?.offPrice) * 100
+    getNumber(item.balanceFen) >= getNumber(pageData.value?.offPrice) * 100
       ? getNumber(pageData.value?.offPrice)
-      : getNumber(wallet.balanceFen) / 100
+      : getNumber(item.balanceFen) / 100
   isWalletSelectShow.value = false
 }
 

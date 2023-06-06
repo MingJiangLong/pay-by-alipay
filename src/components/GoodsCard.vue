@@ -6,12 +6,23 @@
         {{ props.goodsName ?? "" }}
       </div>
       <div class="goods-price">
-        <span v-if="`${props.goodsActualPrice ?? ''}`.length">{{
-          `¥${props.goodsActualPrice ?? ""}`
-        }}</span>
-        <span v-if="`${props.goodsOriginPrice ?? ''}`.length">{{
-          `¥${props.goodsOriginPrice ?? ""}`
-        }}</span>
+        <span
+          :style="{
+            color:
+              props.goodsActualPrice == props.goodsOriginPrice
+                ? 'black'
+                : 'red',
+          }"
+          v-if="`${props.goodsActualPrice ?? ''}`.length"
+          >{{ `¥${props.goodsActualPrice ?? ""}` }}</span
+        >
+        <span
+          v-if="
+            `${props.goodsOriginPrice ?? ''}`.length &&
+            props.goodsActualPrice != props.goodsOriginPrice
+          "
+          >{{ `¥${props.goodsOriginPrice ?? ""}` }}</span
+        >
       </div>
     </div>
   </div>
@@ -20,7 +31,6 @@
 <script setup lang="ts">
 import {} from "vue"
 
-// 为什么这里类型不能使用全局类型？
 const props = defineProps<{
   goodsUrl?: string
   goodsName?: string
@@ -53,13 +63,13 @@ const props = defineProps<{
 
 .goods-price {
   padding-top: 2px;
-  & > span:first-child {
+  & > span:nth-child(odd) {
     font-size: 18px;
     color: #ff4027;
     letter-spacing: 0;
     font-weight: 500;
   }
-  & > span:last-child {
+  & > span:nth-child(even) {
     font-size: 13px;
     color: #737373;
     letter-spacing: 0;

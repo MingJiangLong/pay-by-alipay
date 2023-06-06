@@ -1,53 +1,79 @@
 <template>
-  <Modal>
+  <Modal :visible="props.visible">
     <div class="component-wallet-select">
       <div>
-        <div>请选择支付钱包</div>
+        <div class="title-container">
+          <div>请选择支付钱包</div>
+          <Icon :source="close" @click="onClose" />
+        </div>
         <div
           class="wallet-item"
           v-for="(item, index) in props.options"
           :key="index"
-          @click="onClickItem(index, item)"
+          @click="onClickItem(item)"
         >
           <div>
             <div>{{ item.name }}</div>
             <div>{{ `余额 ${item.balanceFen / 100}` }}</div>
           </div>
           <Icon :source="unUse" v-if="item.balanceFen == 0" />
-          <Icon :source="activeImage" v-else-if="selected == index" />
+          <Icon
+            :source="activeImage"
+            v-else-if="selected?.uniqueId == item.uniqueId"
+          />
           <Icon :source="inactiveImage" v-else />
         </div>
       </div>
-      <div class="btn" @click="onClose">确定</div>
+      <div class="btn" @click="onSelect">确定</div>
     </div>
   </Modal>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue"
+import { ref, watch } from "vue"
 import Modal from "./Modal.vue"
 import activeImage from "../assets/images/rb_sel.png"
 import inactiveImage from "../assets/images/rb_unsel.png"
 import unUse from "../assets/images/un_use.png"
+import close from "../assets/images/icon_close.png"
 import Icon from "./Icon.vue"
 const emit = defineEmits<{
-  (e: "onClose", item?: number): void
+  (e: "onClose"): void
+  (e: "onSelect", item?: Wallet): void
 }>()
+
 const props = defineProps<{
-  options: { name: string; balanceFen: number }[]
+  options: Wallet[]
+  selectedItem?: Wallet
+  visible: boolean
 }>()
-const selected = ref<number>()
+
+const selected = ref<Wallet>()
+
+watch(
+  () => [props.visible, props.selectedItem],
+  newValue => {
+    if (newValue) {
+      selected.value = props.selectedItem
+    }
+  }
+)
 
 function onClose() {
-  emit("onClose", selected.value)
+  emit("onClose")
 }
-function onClickItem(index: number, item: any) {
+
+function onSelect() {
+  emit("onSelect", selected.value)
+}
+
+function onClickItem(item: Wallet) {
   if (item.balanceFen == 0) return
-    
-  if (index == selected.value) {
+
+  if (item.uniqueId == selected.value?.uniqueId) {
     return (selected.value = undefined)
   }
-  selected.value = index
+  selected.value = item
 }
 </script>
 
@@ -68,6 +94,10 @@ function onClickItem(index: number, item: any) {
     text-align: center;
     padding: 16px 0;
     flex: 1;
+
+    // &::after {
+    //   content: "×";
+    // }
   }
   .btn {
     background-image: var(--ubox-btn-background);
@@ -81,6 +111,13 @@ function onClickItem(index: number, item: any) {
     font-weight: 500;
     margin: 10px 20px;
   }
+}
+
+.title-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-right: 16px;
 }
 .wallet-item {
   display: flex;
