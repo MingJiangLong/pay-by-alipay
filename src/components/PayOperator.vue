@@ -5,7 +5,7 @@
         <span>金额</span>
         <span>¥{{ props?.price ?? 0 }}</span>
       </div>
-      <div>
+      <div v-if="props?.discount != 0">
         <span>共优惠</span>
         <span>¥{{ props?.discount ?? 0 }}</span>
       </div>
@@ -19,7 +19,7 @@
 <script setup lang="ts">
 import {} from "vue"
 const props = defineProps<{
-  price: string
+  price: number
   discount: number
 }>()
 const emit = defineEmits<{

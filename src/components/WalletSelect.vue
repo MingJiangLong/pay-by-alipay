@@ -92,12 +92,8 @@ function onClickItem(item: Wallet) {
     color: #3b3b3b;
     letter-spacing: 0;
     text-align: center;
-    padding: 16px 0;
+    padding: 10px 0;
     flex: 1;
-
-    // &::after {
-    //   content: "×";
-    // }
   }
   .btn {
     background-image: var(--ubox-btn-background);
@@ -135,14 +131,14 @@ function onClickItem(item: Wallet) {
       font-size: 16px;
       color: #333333;
       letter-spacing: 0;
-      line-height: 16px;
+      // line-height: 16px;
       font-weight: 500;
     }
     & > div:last-child {
       font-size: 12px;
       color: #737373;
       letter-spacing: 0;
-      padding-top: var(--ubox-base-gap);
+      // padding-top:8px;
     }
   }
 }

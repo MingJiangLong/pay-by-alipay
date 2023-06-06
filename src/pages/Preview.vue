@@ -22,7 +22,7 @@
       />
     </Main>
     <Footer>
-      <PayOperator :price="bill" :discount="off" @onClick="onClickPayBtn" />
+      <PayOperator :price="bill.toNumber()" :discount="off.toNumber()" @onClick="onClickPayBtn" />
     </Footer>
   </PageContainer>
 </template>
@@ -43,6 +43,7 @@ import { createOrder, reportPaidStatus } from "@/service"
 import { useRouter } from "vue-router"
 import { ALIPAY_STATUS, UBOX_REQUEST_SUCCESS } from "@/config/constant"
 import callWhenDev from "@/utils/callWhenDev"
+import Decimal from "decimal.js"
 const router = useRouter()
 const pageData = ref<BEData>()
 const isWalletSelectShow = ref(false)
@@ -56,19 +57,14 @@ const deductionOfWallet = ref<number>()
 /** 账单需要支付金额 */
 const bill = computed(() => {
   //支付金额 = 折扣后的金额 - 活动 - 优惠券 - 钱包(目前没有活动和优惠券)
-  return `${
-    (getNumber(pageData.value?.offPrice) * 100 -
-      getNumber(deductionOfWallet.value) * 100) /
-    100
-  }`
+
+  return new Decimal(getNumber(pageData.value?.offPrice)).minus(
+    getNumber(deductionOfWallet.value)
+  )
 })
 
 const off = computed(() => {
-  return (
-    (getNumber(pageData.value?.totalPrice) * 100 -
-      getNumber(bill.value) * 100) /
-    100
-  )
+  return new Decimal(getNumber(pageData.value?.totalPrice)).minus(bill.value)
 })
 /**
  * 拉起支付宝收银台支付
@@ -94,7 +90,7 @@ async function createUboxOrder() {
   try {
     ap.showLoading({ content: "创建订单中..." })
     let orderInfo = await createOrder({
-      toPayPrice: bill.value ?? "0",
+      toPayPrice: `${bill.value.toNumber()}` ?? "0",
       funds:
         deductionOfWallet.value && deductionOfWallet.value > 0
           ? {

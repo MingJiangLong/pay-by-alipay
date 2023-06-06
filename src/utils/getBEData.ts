@@ -3,7 +3,7 @@ export default function () {
   if (MODE === "development") {
     return {
       totalPrice: "2.50",
-      offPrice: "2.0",
+      offPrice: "2.50",
       innerCode: "10100348",
       vmOnline: true,
       channel: "alipay",
