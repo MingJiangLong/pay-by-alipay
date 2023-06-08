@@ -100,5 +100,11 @@ declare namespace ap {
   function popTo(index?: number): void
 
   function onResume(callback: (params?: any) => void): void
+
+  function pushWindow({
+    url: string
+  }): void
+
+  function onResume(callback: () => void)
 }
 

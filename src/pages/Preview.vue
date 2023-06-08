@@ -22,7 +22,11 @@
       />
     </Main>
     <Footer>
-      <PayOperator :price="bill.toNumber()" :discount="off.toNumber()" @onClick="onClickPayBtn" />
+      <PayOperator
+        :price="bill.toNumber()"
+        :discount="off.toNumber()"
+        @onClick="onClickPayBtn"
+      />
     </Footer>
   </PageContainer>
 </template>
@@ -180,9 +184,11 @@ async function onClickPayBtn() {
       content: error?.message,
       type: "fail",
     })
-    setTimeout(() => {
-      window.location.reload()
-    }, 3000)
+    if (import.meta.env.MODE == "prod") {
+      setTimeout(() => {
+        window.location.reload()
+      }, 3000)
+    }
   }
 }
 

@@ -14,6 +14,13 @@ axios.interceptors.request.use((config) => {
   })
   return config
 })
+
+axios.interceptors.response.use(undefined, (error) => {
+  callWhenDev(() => {
+    console.log('接口出错:', error.code, error?.message);
+  })
+  return error
+})
 /**
  * 创建订单
  * @param data 

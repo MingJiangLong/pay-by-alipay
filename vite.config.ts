@@ -4,7 +4,7 @@ import legacy from '@vitejs/plugin-legacy'
 import path from "path";
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: "https://q.dev.uboxol.com/",
+  // base: "https://q.dev.uboxol.com/",
   plugins: [
     vue(),
     legacy({
@@ -45,6 +45,8 @@ export default defineConfig({
   build: {
     outDir: "../q/src/main/resources/static",
     emptyOutDir: true,
+    manifest:true,
+    target:"es2015",
     terserOptions: {
       compress: {
         //生产环境时移除console
