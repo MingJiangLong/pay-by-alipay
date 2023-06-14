@@ -7,7 +7,7 @@ const app = createApp(App);
 // app.config.errorHandler = (_err, _vm, info) => {
 //   ap.showToast({ content: info })
 // }
-ap.onResume(() => {
-  window.location.reload()
-})
+// ap.onResume(() => {
+//   window.location.reload()
+// })
 app.use(router).mount('#app')

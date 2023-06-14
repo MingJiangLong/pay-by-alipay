@@ -1,8 +1,7 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="zh">
   <head>
     <meta charset="UTF-8" />
-    <!-- <link rel="icon" type="image/svg+xml" href="/vite.svg" /> -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://gw.alipayobjects.com/as/g/h5-lib/alipayjsapi/3.1.1/alipayjsapi.min.js"></script>
     <title>扫码(支付深圳)</title>
@@ -18,7 +17,6 @@
           var goodsPic = "[(${pic})]";
           var goodsAvailable = [[${goodsAvailable}]];
           var funds = [(${funds})];
-          //下面几项根据产品需求返回,可空
           var coupons = [(${coupons})];
           var couponsAmount = [(${couponsAmount})];
           var campaigns = [(${campaigns})];
@@ -27,11 +25,6 @@
           var max = 1;
        /*]]>*/
     </script>
-    <!-- <script src="https://unpkg.com/vconsole@latest/dist/vconsole.min.js"></script>
-    <script>
-      // VConsole will be exported to `window.VConsole` by default.
-      var vConsole = new window.VConsole();
-    </script> -->
   </head>
   <body>
     <div id="app"></div>

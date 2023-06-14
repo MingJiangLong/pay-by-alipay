@@ -139,6 +139,7 @@ async function reportStatus2Ubox(trade: string, status: number) {
  */
 async function onClickPayBtn() {
   try {
+    if(!!!pageData.value?.vmOnline) return router.push('/machine-offline')
     let temp = await createUboxOrder()
     let alipayCode: ResultCode = ALIPAY_STATUS.SUCCESS
 
@@ -226,6 +227,7 @@ function onWalletClick() {
 onMounted(() => {
   pageData.value = getBEData()
 
+  if(!!!pageData.value.vmOnline) router.push('/machine-offline')
   callWhenDev(() => {
     console.log(JSON.stringify(getBEData()))
   })

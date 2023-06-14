@@ -2,9 +2,8 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import legacy from '@vitejs/plugin-legacy'
 import path from "path";
-// https://vitejs.dev/config/
+import viteCompression from 'vite-plugin-compression'
 export default defineConfig({
-  // base: "https://q.dev.uboxol.com/",
   plugins: [
     vue(),
     legacy({
@@ -30,11 +29,8 @@ export default defineConfig({
         'esnext.string.match-all'
       ]
     }),
-    // createHtmlPlugin({
-    //   minify: true,
-    //   entry:'src/main.ts',
-    //   template:'public/index.html',
-    // })
+    viteCompression(),
+
   ],
 
   resolve: {
@@ -44,16 +40,27 @@ export default defineConfig({
   },
   build: {
     outDir: "../q/src/main/resources/static",
+    manifest: true,
     emptyOutDir: true,
-    manifest:true,
-    target:"es2015",
     terserOptions: {
       compress: {
-        //生产环境时移除console
         drop_console: true,
         drop_debugger: true,
       },
     },
+    chunkSizeWarningLimit: 1000,
+    rollupOptions: {
+      output: {
+        entryFileNames: 'assets/entry/[name][hash].js',
+        chunkFileNames: 'assets/chunk/[name][hash].js',
+        assetFileNames: 'assets/file/[name][hash].[ext]',
+        manualChunks(id) {
+          const NODE_MODULES = 'node_modules'
+          if (id.includes(NODE_MODULES)) return 'vendor'
+        },
+
+      },
+    }
   },
   server: {
     host: "0.0.0.0"

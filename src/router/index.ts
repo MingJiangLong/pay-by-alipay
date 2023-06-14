@@ -21,6 +21,11 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('@/pages/Ads.vue'),
     meta: { title: "广告" },
   },
+  {
+    path:"/machine-offline",
+    component:()=>import('@/pages/Offline.vue'),
+    meta: { title: "机器网络异常" },
+  }
 
 
 ]

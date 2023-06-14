@@ -5,7 +5,7 @@ export default function () {
       totalPrice: "2.50",
       offPrice: "2.50",
       innerCode: "10100348",
-      vmOnline: true,
+      vmOnline: false,
       channel: "alipay",
       goodId: 308,
       goodName: "\u767E\u4E8B\u7F8E\u5E74\u8FBE\u6A59\u5473\u6C7D\u6C34330ml",
