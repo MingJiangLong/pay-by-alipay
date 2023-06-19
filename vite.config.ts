@@ -42,6 +42,7 @@ export default defineConfig({
     outDir: "../q/src/main/resources/static",
     manifest: true,
     emptyOutDir: true,
+    minify:"terser",
     terserOptions: {
       compress: {
         drop_console: true,

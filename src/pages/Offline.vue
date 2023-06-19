@@ -3,7 +3,7 @@
     <Main>
       <div>
         <img src="../assets/images/empty_network.png" />
-        <div>网络异常，请重试</div>
+        <div>机器网络异常，请重试</div>
         <button @click="onBtnClick">关闭</button>
       </div>
     </Main>
