@@ -5,7 +5,7 @@ export default function () {
       totalPrice: "2.50",
       offPrice: "2.50",
       innerCode: "10100348",
-      vmOnline: false,
+      vmOnline: true,
       channel: "alipay",
       goodId: 308,
       goodName: "\u767E\u4E8B\u7F8E\u5E74\u8FBE\u6A59\u5473\u6C7D\u6C34330ml",
@@ -19,12 +19,18 @@ export default function () {
       coupons: [],
       couponsAmount: 0,
       campaigns: [{
-        amountFen:130,
-        id:'12222',
+        amountFen: 130,
+        id: '12222',
 
       }],
       campaignsAmount: 0,
       toPayPrice: "2.50",
+      uid: "2",
+      ad: JSON.stringify({
+        pic: "https://img.ubox.cn/ubox_mdse/308/0.png?t=20160922095628",
+        adType:2,
+        url:"http://www.baidu.com"
+      })
     }
   }
 

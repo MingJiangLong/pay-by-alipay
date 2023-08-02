@@ -3,6 +3,7 @@ import vue from '@vitejs/plugin-vue'
 import legacy from '@vitejs/plugin-legacy'
 import path from "path";
 import viteCompression from 'vite-plugin-compression'
+const isProd = process.argv[process.argv.length - 1] == 'prod'
 export default defineConfig({
   plugins: [
     vue(),
@@ -45,8 +46,8 @@ export default defineConfig({
     minify:"terser",
     terserOptions: {
       compress: {
-        drop_console: true,
-        drop_debugger: true,
+        drop_console: isProd ? true : false,
+        drop_debugger: isProd ? true : false,
       },
     },
     chunkSizeWarningLimit: 1000,

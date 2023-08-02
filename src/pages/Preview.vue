@@ -1,6 +1,8 @@
 <template>
   <PageContainer>
     <Main>
+      <!-- 背景游戏自动注入样式 -->
+      <div id="ubox_games_gate"></div>
       <GoodsCard
         :goodsOriginPrice="pageData?.totalPrice"
         :goodsActualPrice="pageData?.offPrice"
@@ -12,6 +14,13 @@
         @onClick="onWalletClick"
         :deduction="deductionOfWallet"
         :name="selectedWallet?.name"
+      />
+
+      <!-- 广告 -->
+      <img
+        v-if="adsLink.imageUrl"
+        :src="adsLink.imageUrl"
+        @click="onPicAdsClick(adsLink.redirectUrl)"
       />
       <WalletSelect
         :visible="isWalletSelectShow"
@@ -38,20 +47,29 @@ import PayOperator from "@/components/PayOperator.vue"
 import PageContainer from "@/components/PageContainer.vue"
 import Main from "@/components/Main.vue"
 import Footer from "@/components/Footer.vue"
-// import Coupons from "@/components/Coupons.vue"
 import Wallet from "@/components/Wallet.vue"
 import WalletSelect from "@/components/WalletSelect.vue"
 import getBEData from "@/utils/getBEData"
-import getNumber from "@/utils/getNumber"
 import { createOrder, reportPaidStatus } from "@/service"
 import { useRouter } from "vue-router"
 import { ALIPAY_STATUS, UBOX_REQUEST_SUCCESS } from "@/config/constant"
-import callWhenDev from "@/utils/callWhenDev"
 import Decimal from "decimal.js"
 const router = useRouter()
 const pageData = ref<BEData>()
 const isWalletSelectShow = ref(false)
 
+/** 广告类型 */
+enum ADS_TYPE {
+  /** 图片广告 */
+  PIC = 2,
+
+  /** 跳转类广告 */
+  REDIRECT = 1,
+}
+const adsLink = ref({
+  imageUrl: "",
+  redirectUrl: "",
+})
 /** 选中的钱包 */
 const selectedWallet = ref<Wallet>()
 
@@ -62,13 +80,13 @@ const deductionOfWallet = ref<number>()
 const bill = computed(() => {
   //支付金额 = 折扣后的金额 - 活动 - 优惠券 - 钱包(目前没有活动和优惠券)
 
-  return new Decimal(getNumber(pageData.value?.offPrice)).minus(
-    getNumber(deductionOfWallet.value)
+  return new Decimal(pageData.value?.offPrice ?? 0).minus(
+    deductionOfWallet.value ?? 0
   )
 })
 
 const off = computed(() => {
-  return new Decimal(getNumber(pageData.value?.totalPrice)).minus(bill.value)
+  return new Decimal(pageData.value?.totalPrice ?? 0).minus(bill.value)
 })
 /**
  * 拉起支付宝收银台支付
@@ -98,7 +116,7 @@ async function createUboxOrder() {
       funds:
         deductionOfWallet.value && deductionOfWallet.value > 0
           ? {
-              amountFen: (deductionOfWallet.value ?? 0) * 100,
+              amountFen: new Decimal(deductionOfWallet.value ?? 0).mul(100),
               uniqueId: selectedWallet.value?.uniqueId ?? "",
             }
           : undefined,
@@ -139,7 +157,7 @@ async function reportStatus2Ubox(trade: string, status: number) {
  */
 async function onClickPayBtn() {
   try {
-    if(!!!pageData.value?.vmOnline) return router.push('/machine-offline')
+    if (!!!pageData.value?.vmOnline) return router.push("/machine-offline")
     let temp = await createUboxOrder()
     let alipayCode: ResultCode = ALIPAY_STATUS.SUCCESS
 
@@ -148,14 +166,18 @@ async function onClickPayBtn() {
     }
 
     let reportResult = await reportStatus2Ubox(temp.data.trade, alipayCode)
+
+    // 友宝后端处理异常
     if (reportResult.data.error != UBOX_REQUEST_SUCCESS)
       throw new Error(reportResult.data.message)
 
     let reportResultData = reportResult?.data
 
+    // 支付宝状态只处理成功和失败
     if (alipayCode != ALIPAY_STATUS.SUCCESS && alipayCode != ALIPAY_STATUS.FAIL)
       return
 
+    // 支付宝支付失败
     if (alipayCode == ALIPAY_STATUS.FAIL) {
       return router.push({
         path: "/paid",
@@ -166,10 +188,17 @@ async function onClickPayBtn() {
       })
     }
 
+    // 上报友宝后端之后 处理广告相关
+    let picAds = { imageUrl: "", redirectUrl: "" }
     try {
       let adJson = JSON.parse(reportResultData?.adJson)
-      if (adJson?.url) {
+      if (adJson?.adType == ADS_TYPE.REDIRECT && adJson?.url) {
         return (window.location.href = adJson?.url)
+      }
+
+      if (adJson?.adType == ADS_TYPE.PIC && adJson?.pic) {
+        picAds.imageUrl = adJson.pic
+        picAds.redirectUrl = adJson?.url
       }
     } catch (error) {}
 
@@ -178,6 +207,7 @@ async function onClickPayBtn() {
       query: {
         uboxStatus: reportResultData.orderStatus,
         alipayCode: ALIPAY_STATUS.SUCCESS,
+        ...picAds,
       },
     })
   } catch (error: any) {
@@ -211,9 +241,10 @@ function onSelectPayWay(item?: Wallet) {
   // 价格(元)和钱包(分)单位不统一
   selectedWallet.value = item
   deductionOfWallet.value =
-    getNumber(item.balanceFen) >= getNumber(pageData.value?.offPrice) * 100
-      ? getNumber(pageData.value?.offPrice)
-      : getNumber(item.balanceFen) / 100
+    new Decimal(item.balanceFen).toNumber() >=
+    new Decimal(pageData.value?.offPrice ?? 0).mul(100).toNumber()
+      ? new Decimal(pageData.value?.offPrice ?? 0).toNumber()
+      : new Decimal(item?.balanceFen ?? 0).div(100).toNumber()
   isWalletSelectShow.value = false
 }
 
@@ -224,14 +255,37 @@ function onWalletClick() {
   isWalletSelectShow.value = true
 }
 
+function initPicAdsLink() {
+  try {
+    const temp = JSON.parse(pageData.value?.ad)
+    console.log(temp)
+
+    /** 商品详情页只放图片类广告 */
+    if (temp?.adType !== ADS_TYPE.PIC || !temp.pic) return
+    adsLink.value = {
+      imageUrl: temp.pic,
+      redirectUrl: temp.url,
+    }
+  } catch (error) {}
+}
+
+function onPicAdsClick(link: string) {
+  if (!link) return
+  window.location.href = link
+}
 onMounted(() => {
   pageData.value = getBEData()
-
-  if(!!!pageData.value.vmOnline) router.push('/machine-offline')
-  callWhenDev(() => {
-    console.log(JSON.stringify(getBEData()))
-  })
+  initPicAdsLink()
+  if (!!!pageData.value.vmOnline) router.push("/machine-offline")
 })
 </script>
 
-<style scoped lang="less"></style>
+<style scoped lang="less">
+img {
+  box-sizing: border-box;
+  width: 100%;
+  object-fit: fill;
+  padding: 30px 8px;
+  border-radius: 8px;
+}
+</style>

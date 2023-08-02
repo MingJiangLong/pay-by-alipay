@@ -14,7 +14,7 @@
         >
           <div>
             <div>{{ item.name }}</div>
-            <div>{{ `余额 ${item.balanceFen / 100}` }}</div>
+            <div>{{ `余额 ${new Decimal(item.balanceFen).div(100)}` }}</div>
           </div>
           <Icon :source="unUse" v-if="item.balanceFen == 0" />
           <Icon
@@ -37,6 +37,7 @@ import inactiveImage from "../assets/images/rb_unsel.png"
 import unUse from "../assets/images/un_use.png"
 import close from "../assets/images/icon_close.png"
 import Icon from "./Icon.vue"
+import Decimal from "decimal.js"
 const emit = defineEmits<{
   (e: "onClose"): void
   (e: "onSelect", item?: Wallet): void

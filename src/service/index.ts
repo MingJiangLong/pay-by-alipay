@@ -1,4 +1,3 @@
-import callWhenDev from '@/utils/callWhenDev'
 import getBEData from '@/utils/getBEData'
 import Axios from 'axios'
 
@@ -9,16 +8,12 @@ const axios = Axios.create({
 
 
 axios.interceptors.request.use((config) => {
-  callWhenDev(() => {
-    console.log(`请求URL:${config.url}-->data:${JSON.stringify(config.data)}`);
-  })
+  console.log(`请求URL:${config.url}-->data:${JSON.stringify(config.data)}`);
   return config
 })
 
 axios.interceptors.response.use(undefined, (error) => {
-  callWhenDev(() => {
-    console.log('接口出错:', error.code, error?.message);
-  })
+  console.log('接口出错:', error.code, error?.message);
   return error
 })
 /**

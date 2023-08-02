@@ -1,33 +1,39 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="zh">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="https://gw.alipayobjects.com/as/g/h5-lib/alipayjsapi/3.1.1/alipayjsapi.min.js"></script>
-    <title>扫码(支付深圳)</title>
-    <script th:inline="javascript">
-      /*<![CDATA[*/
-          var totalPrice = [[${priceTotal}]];
-          var offPrice = [[${offPrice}]];
-          var innerCode= [[${vm}]];
-          var vmOnline = [[${vmOnline}]];
-          var channel = "alipay";
-          var goodId= [[${item.productId}]];
-          var goodName = [[${item.fullName}]];
-          var goodsPic = "[(${pic})]";
-          var goodsAvailable = [[${goodsAvailable}]];
-          var funds = [(${funds})];
-          var coupons = [(${coupons})];
-          var couponsAmount = [(${couponsAmount})];
-          var campaigns = [(${campaigns})];
-          var campaignsAmount = [(${campaignsAmount})];
-          var toPayPrice = [[${toPayPrice}]];
-          var max = 1;
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://gw.alipayobjects.com/as/g/h5-lib/alipayjsapi/3.1.1/alipayjsapi.min.js"></script>
+  <title>扫码(支付深圳)</title>
+  <script th:inline="javascript">
+    /*<![CDATA[*/
+    var totalPrice = [[${ priceTotal }]];
+    var offPrice = [[${ offPrice }]];
+    var innerCode = [[${ vm }]];
+    var vmOnline = [[${ vmOnline }]];
+    var channel = "alipay";
+    var goodId = [[${ item.productId }]];
+    var goodName = [[${ item.fullName }]];
+    var goodsPic = "[(${pic})]";
+    var goodsAvailable = [[${ goodsAvailable }]];
+    var funds = [(${ funds })];
+    var coupons = [(${ coupons })];
+    var couponsAmount = [(${ couponsAmount })];
+    var campaigns = [(${ campaigns })];
+    var campaignsAmount = [(${ campaignsAmount })];
+    var toPayPrice = [[${ toPayPrice }]];
+    var max = 1;
+    var ad = [[${ adObj }]];
+    var uid = [[${ uid }]];
        /*]]>*/
-    </script>
-  </head>
-  <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.ts"></script>
-  </body>
+  </script>
+</head>
+
+<body>
+  <div id="app"></div>
+  <script type="module" src="/src/main.ts"></script>
+  <script defer type="text/javascript" th:src="@{https://uboxgame.ubox.cn/games_gate/buy_page?source=ali-qr&vmcode={vmid}(vmid=${vm})&uid={uid}(uid=${uid})&pid={pid}(pid=${item.productId})&typeid=1&tabid=1&sellerId=1&price={price}(price=${toPayPrice*100})&balance={balance}(balance=${100})&time={time}(time=${#temporals.second(localDateTime)})}"></script>
+</body>
+
 </html>

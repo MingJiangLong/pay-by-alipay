@@ -45,6 +45,8 @@ interface BEData {
   campaigns: any[],
   campaignsAmount: number,
   toPayPrice: string,
+  uid: string
+  ad: any
 }
 interface Wallet {
   balanceFen: number

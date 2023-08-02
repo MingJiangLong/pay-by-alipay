@@ -8,7 +8,7 @@
       <div :style="{ color: props.deduction ? 'red' : '#929292' }">
         {{
           props.deduction
-            ? `-¥ ${getNumber(props.deduction).toFixed(2)}`
+            ? `-¥ ${new Decimal(props.deduction).toFixed(2)}`
             : " 可选择钱包支付"
         }}
       </div>
@@ -22,7 +22,7 @@ import walletImage from "../assets/images/icon_wallet.png"
 import rightArrow from "../assets/images/arrow_right_gray.png"
 import {} from "vue"
 import Icon from "./Icon.vue"
-import getNumber from "@/utils/getNumber"
+import Decimal from "decimal.js"
 const emit = defineEmits<{
   (e: "onClick"): void
 }>()
