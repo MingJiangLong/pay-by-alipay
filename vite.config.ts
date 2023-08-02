@@ -3,6 +3,7 @@ import vue from '@vitejs/plugin-vue'
 import legacy from '@vitejs/plugin-legacy'
 import path from "path";
 import viteCompression from 'vite-plugin-compression'
+import { visualizer } from "rollup-plugin-visualizer";
 const isProd = process.argv[process.argv.length - 1] == 'prod'
 export default defineConfig({
   plugins: [
@@ -31,7 +32,10 @@ export default defineConfig({
       ]
     }),
     viteCompression(),
-
+    visualizer({
+      emitFile: true,
+      filename: "stats.html",
+    })
   ],
 
   resolve: {
@@ -43,7 +47,7 @@ export default defineConfig({
     outDir: "../q/src/main/resources/static",
     manifest: true,
     emptyOutDir: true,
-    minify:"terser",
+    minify: "terser",
     terserOptions: {
       compress: {
         drop_console: isProd ? true : false,

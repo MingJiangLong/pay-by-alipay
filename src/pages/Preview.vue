@@ -53,7 +53,8 @@ import getBEData from "@/utils/getBEData"
 import { createOrder, reportPaidStatus } from "@/service"
 import { useRouter } from "vue-router"
 import { ALIPAY_STATUS, UBOX_REQUEST_SUCCESS } from "@/config/constant"
-import Decimal from "decimal.js"
+// @ts-ignore
+import Decimal from '../lib/decimal.min.mjs';
 const router = useRouter()
 const pageData = ref<BEData>()
 const isWalletSelectShow = ref(false)

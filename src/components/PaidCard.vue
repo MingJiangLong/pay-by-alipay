@@ -24,6 +24,7 @@ const props = defineProps<{
 const desc = computed(() => {
   return props.message
 })
+
 </script>
 
 <style scoped lang="less">

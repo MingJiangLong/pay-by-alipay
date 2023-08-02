@@ -4,7 +4,7 @@
       <PaidCard
         :message="paidResult"
         :imgSource="imgSource"
-        :mode="!picAds.imageUrl ? 2 : 1"
+        :mode="!!picAds.imageUrl ? 2 : 1"
       />
       <!-- 广告 -->
       <img
@@ -59,6 +59,7 @@ const imgSource = computed(() => {
   if (uboxStatus == UBOX_STATUS.ALL_SUCCESS) return success
   return pending
 })
+
 
 const picAds = computed(() => {
   const query = route.query

@@ -27,7 +27,7 @@ export default function () {
       toPayPrice: "2.50",
       uid: "2",
       ad: JSON.stringify({
-        pic: "https://img.ubox.cn/ubox_mdse/308/0.png?t=20160922095628",
+        pic: "http://v.dev.uboxol.com/ad-manager/img/1134545754531172352.jpg",
         adType:2,
         url:"http://www.baidu.com"
       })

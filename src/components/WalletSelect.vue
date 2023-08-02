@@ -37,7 +37,8 @@ import inactiveImage from "../assets/images/rb_unsel.png"
 import unUse from "../assets/images/un_use.png"
 import close from "../assets/images/icon_close.png"
 import Icon from "./Icon.vue"
-import Decimal from "decimal.js"
+// @ts-ignore
+import Decimal from '../lib/decimal.min.mjs';
 const emit = defineEmits<{
   (e: "onClose"): void
   (e: "onSelect", item?: Wallet): void

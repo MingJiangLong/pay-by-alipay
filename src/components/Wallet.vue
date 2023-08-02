@@ -22,7 +22,8 @@ import walletImage from "../assets/images/icon_wallet.png"
 import rightArrow from "../assets/images/arrow_right_gray.png"
 import {} from "vue"
 import Icon from "./Icon.vue"
-import Decimal from "decimal.js"
+// @ts-ignore
+import Decimal from '../lib/decimal.min.mjs';
 const emit = defineEmits<{
   (e: "onClick"): void
 }>()
