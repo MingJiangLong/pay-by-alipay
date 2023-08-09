@@ -88,7 +88,7 @@ img {
   box-sizing: border-box;
   width: 100%;
   object-fit: fill;
-  padding: 30px 8px;
+  padding: 15px 8px;
   border-radius: 8px;
 }
 </style>

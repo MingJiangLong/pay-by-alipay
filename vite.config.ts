@@ -3,14 +3,14 @@ import vue from '@vitejs/plugin-vue'
 import legacy from '@vitejs/plugin-legacy'
 import path from "path";
 import viteCompression from 'vite-plugin-compression'
-import { visualizer } from "rollup-plugin-visualizer";
+// import { visualizer } from "rollup-plugin-visualizer";
 const isProd = process.argv[process.argv.length - 1] == 'prod'
 export default defineConfig({
   plugins: [
     vue(),
     legacy({
       targets: ['defaults', 'ie >= 11', 'chrome 52'],  //需要兼容的目标列表，可以设置多个
-      additionalLegacyPolyfills: ['regenerator-runtime/runtime'],
+      additionalLegacyPolyfills: ['regenerator-runtime/runtime'],// 支持async await
       renderLegacyChunks: true,
       polyfills: [
         'es.symbol',
@@ -32,10 +32,10 @@ export default defineConfig({
       ]
     }),
     viteCompression(),
-    visualizer({
-      emitFile: true,
-      filename: "stats.html",
-    })
+    // visualizer({
+    //   emitFile: true,
+    //   filename: "stats.html",
+    // })
   ],
 
   resolve: {

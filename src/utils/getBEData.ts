@@ -26,11 +26,7 @@ export default function () {
       campaignsAmount: 0,
       toPayPrice: "2.50",
       uid: "2",
-      ad: JSON.stringify({
-        pic: "http://v.dev.uboxol.com/ad-manager/img/1134545754531172352.jpg",
-        adType:2,
-        url:"http://www.baidu.com"
-      })
+      ad: {"code":200,"msg":"推送广告-测试-114","adId":114,"adType":2,"pic":"http://v.dev.uboxol.com/ad-manager/img/1134545754531172352.jpg","url":"http://ubox-act.dev.uboxol.com/yqz6/zfbcj191015/wxlb?adid=114&vmid=0081118&uid=207152644&pid=1496&transcationId=&orderId=&key=0a8883cb4dcf4e439c331b494e685adb","cookievalue":"2-4-114-","data":"{\"closeTime\":0}"}
     }
   }
 
@@ -49,7 +45,9 @@ export default function () {
     'couponsAmount',
     'campaigns',
     'campaignsAmount',
-    'toPayPrice'
+    'toPayPrice',
+    'uid',
+    'ad'
   ]
 
   return keys.reduce<BEData>((temp, key) => {

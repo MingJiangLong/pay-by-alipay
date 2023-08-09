@@ -54,7 +54,7 @@ import { createOrder, reportPaidStatus } from "@/service"
 import { useRouter } from "vue-router"
 import { ALIPAY_STATUS, UBOX_REQUEST_SUCCESS } from "@/config/constant"
 // @ts-ignore
-import Decimal from '../lib/decimal.min.mjs';
+import Decimal from "../lib/decimal.min.mjs"
 const router = useRouter()
 const pageData = ref<BEData>()
 const isWalletSelectShow = ref(false)
@@ -259,8 +259,6 @@ function onWalletClick() {
 function initPicAdsLink() {
   try {
     const temp = JSON.parse(pageData.value?.ad)
-    console.log(temp)
-
     /** 商品详情页只放图片类广告 */
     if (temp?.adType !== ADS_TYPE.PIC || !temp.pic) return
     adsLink.value = {
